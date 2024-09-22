@@ -1,7 +1,30 @@
 import React from 'react'
 import { usePopularMoivesQuery } from '../../../../hooks/usePopularMovies';
+import Alert from 'react-bootstrap/Alert';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import MovieCard from '../MovieCard/MovieCard';
 
-const popularMovieSlide = () => {
+const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 8,
+      slidesToSlide: 8 // optional, default to 1.
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 4,
+      slidesToSlide: 4 // optional, default to 1.
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      slidesToSlide: 1 // optional, default to 1.
+    }
+  };
+
+const PopularMovieSlide = () => {
     const {data, isLoading, isError, error } = usePopularMoivesQuery();
 
     if (isLoading){
@@ -14,35 +37,21 @@ const popularMovieSlide = () => {
     return (
         <div>
             <h3>Popular Movies</h3>
-            <Carousel
-                swipeable={true}
-                draggable={true}
-                showDots={true}
-                
-                centerMpde={true}
-                // ssr={true} // means to render carousel on server-side.
-                infinite={true}
-                // autoPlay={this.props.deviceType !== "mobile" ? true : false}
-                // autoPlaySpeed={1000}
-                keyBoardControl={true}
-                customTransition="all .5"
-                transitionDuration={500}
-                
-                removeArrowOnDeviceType={["tablet", "mobile"]}
-                deviceType={this.props.deviceType}
-                dotListClass="custom-dot-list-style"
-
+            <Carousel               
+                centerMode={true}
+                infinite={true}                
                 itemClass="movie-slider p-1"
                 containerClass="carousel-container"
                 responsive={responsive}
                 >
-                <div>Item 1</div>
-                <div>Item 2</div>
-                <div>Item 3</div>
-                <div>Item 4</div>           7:00
+                
+                {data.results.map((movie,index) => (
+                    <MovieCard movie={movie} key={index}/>
+                    ))}
+
             </Carousel>;
         </div>
     )
 }
 
-export default popularMovieSlide;
+export default PopularMovieSlide;
